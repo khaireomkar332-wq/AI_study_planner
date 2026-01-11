@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Study Planner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+    .card {
+      background: white;
+      width: 420px;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4338ca;
+    }
+    pre {
+      background: #f1f1f1;
+      padding: 12px;
+      margin-top: 15px;
+      white-space: pre-wrap;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>AI Study Planner</h2>
+
+    <label>Exam Date</label>
+    <input type="date" id="examDate" />
+
+    <label>Daily Study Hours</label>
+    <input type="number" id="hours" placeholder="e.g. 5" />
+
+    <label>Subjects (comma separated)</label>
+    <textarea id="subjects" placeholder="Maths, DSA, Networks"></textarea>
+
+    <label>Hard Subjects</label>
+    <textarea id="hardSubjects" placeholder="DSA, Maths"></textarea>
+
+    <button onclick="generatePlan()">Generate Study Plan</button>
+
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    function generatePlan() {
+      const examDate = new Date(document.getElementById("examDate").value);
+      const hours = Number(document.getElementById("hours").value);
+      const subjects = document.getElementById("subjects").value.split(",");
+      const hard = document.getElementById("hardSubjects").value.split(",");
+      const output = document.getElementById("output");
+
+      if (!examDate || !hours || subjects.length === 0) {
+        alert("Please fill all required fields");
+        return;
+      }
+
+      output.innerText = "Generating plan...";
+
+      const today = new Date();
+      const daysLeft = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+
+      let plan = `📚 Personalized Study Plan\n\n`;
+      plan += `Days Remaining: ${daysLeft}\n`;
+      plan += `Daily Hours: ${hours}\n\n`;
+
+      subjects.forEach((sub, index) => {
+        const isHard = hard.includes(sub.trim());
+        const time = isHard ? hours * 0.6 : hours * 0.4;
+
+        plan += `Day ${index + 1}:\n`;
+        plan += `• Subject: ${sub.trim()}\n`;
+        plan += `• Study Time: ${time.toFixed(1)} hrs\n`;
+        plan += isHard
+          ? `• Focus: Concept clarity + practice\n\n`
+          : `• Focus: Revision + examples\n\n`;
+      });
+
+      plan += `🧠 Why this plan works:\n`;
+      plan += `• Hard subjects get more time\n`;
+      plan += `• Balanced daily workload\n`;
+      plan += `• Prevents burnout before exams\n`;
+
+      output.innerText = plan;
+    }
+  </script>
+</body>
+</html>
